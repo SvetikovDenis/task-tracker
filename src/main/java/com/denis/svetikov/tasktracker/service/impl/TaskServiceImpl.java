@@ -1,13 +1,12 @@
 package com.denis.svetikov.tasktracker.service.impl;
 
+import com.denis.svetikov.tasktracker.exception.db.EntityNotFoundException;
 import com.denis.svetikov.tasktracker.model.Task;
-import com.denis.svetikov.tasktracker.model.TaskStatus;
 import com.denis.svetikov.tasktracker.repository.TaskRepository;
 import com.denis.svetikov.tasktracker.service.TaskService;
 import com.denis.svetikov.tasktracker.specification.SearchCriteria;
 import com.denis.svetikov.tasktracker.specification.TaskSearchCriteriaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +47,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task findById(Long id) {
-        return taskRepository.findById(id).orElse(null);
+
+        Task task = taskRepository.findById(id).orElse(null);
+
+        if (task == null) {
+            throw new EntityNotFoundException(Task.class, "id", id.toString());
+        }
+
+        return task;
     }
 
 

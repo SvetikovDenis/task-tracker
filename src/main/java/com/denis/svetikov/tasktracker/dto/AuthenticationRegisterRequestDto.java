@@ -21,7 +21,7 @@ public class AuthenticationRegisterRequestDto {
     private String username;
     @NotBlank(message = "Email can't be null")
     private String email;
-    @NotBlank(message = "First Name can't be null")
+    @NotBlank(message = "First name can't be null")
     private String firstName;
     @NotBlank(message = "Last Name can't be null")
     private String lastName;

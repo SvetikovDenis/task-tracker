@@ -2,6 +2,7 @@ package com.denis.svetikov.tasktracker.rest;
 
 import com.denis.svetikov.tasktracker.dto.TaskDto;
 import com.denis.svetikov.tasktracker.dto.UserTaskDto;
+import com.denis.svetikov.tasktracker.exception.db.EntityNotFoundException;
 import com.denis.svetikov.tasktracker.model.Task;
 import com.denis.svetikov.tasktracker.model.TaskStatus;
 import com.denis.svetikov.tasktracker.model.User;
@@ -93,20 +94,19 @@ public class TaskRestControllerV1 {
     }
 
 
-    @GetMapping("{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id){
+    // Refactor return just DTO what about status and headers?
 
-        if (id == null) {
+    @GetMapping("{id}")
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) throws EntityNotFoundException {
+
+        /*if (id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
         Task task = taskService.findById(id);
+        TaskDto taskDto = TaskDto.fromTask(task);
 
-        if(task == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 
 
