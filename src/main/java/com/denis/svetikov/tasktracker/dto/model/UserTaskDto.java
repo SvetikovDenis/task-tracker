@@ -1,4 +1,4 @@
-package com.denis.svetikov.tasktracker.dto;
+package com.denis.svetikov.tasktracker.dto.model;
 
 import com.denis.svetikov.tasktracker.model.UserTask;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

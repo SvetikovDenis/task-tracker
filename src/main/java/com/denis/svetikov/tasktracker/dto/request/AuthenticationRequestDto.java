@@ -1,4 +1,4 @@
-package com.denis.svetikov.tasktracker.dto;
+package com.denis.svetikov.tasktracker.dto.request;
 
 import lombok.Data;
 

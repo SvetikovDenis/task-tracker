@@ -101,8 +101,6 @@ public class JwtUser implements UserDetails {
         return authorities;
     }
 
-
-
     @JsonIgnore
     public Date getLastPasswordResetDate() {
         return lastPasswordResetDate;

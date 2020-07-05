@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -25,10 +26,12 @@ public class BaseEntity {
 
     @CreatedDate
     @Column(name = "created")
+    @NotNull(message = "Create date must not be null")
     private Date created;
 
     @LastModifiedDate
     @Column(name = "updated")
+    @NotNull(message = "Create date must not be null")
     private Date updated;
 
 }

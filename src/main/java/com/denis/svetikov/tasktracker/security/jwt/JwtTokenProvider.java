@@ -3,6 +3,7 @@ package com.denis.svetikov.tasktracker.security.jwt;
 import com.denis.svetikov.tasktracker.model.Role;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +38,7 @@ public class JwtTokenProvider {
 
 
     @Autowired
+    @Qualifier("jwtUserDetailsService")
     private UserDetailsService userDetailsService;
 
     @Bean

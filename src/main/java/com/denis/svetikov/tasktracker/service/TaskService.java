@@ -1,24 +1,29 @@
 package com.denis.svetikov.tasktracker.service;
 
-import com.denis.svetikov.tasktracker.model.Task;
-import com.denis.svetikov.tasktracker.model.TaskStatus;
+import com.denis.svetikov.tasktracker.dto.model.TaskDto;
+import com.denis.svetikov.tasktracker.dto.model.UserTaskDto;
 import com.denis.svetikov.tasktracker.specification.SearchCriteria;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface TaskService {
 
-    List<Task> getAll(SearchCriteria request);
+    List<TaskDto> getAll(SearchCriteria request);
 
-    List<Task> getAllByUserId(Long id);
+    List<TaskDto> getAllByUserId(Long id);
 
-    List<Task> getAllByUseName(String username);
+    List<TaskDto> getAllByUseName(String username);
 
-    Task findById(Long id);
+    TaskDto findById(Long id);
 
-    Task saveTask(Task task);
+    TaskDto createTask(TaskDto task, Principal principal);
+
+    TaskDto updateTask(TaskDto task);
+
+    UserTaskDto updateUserTask(Long taskId, Long userId);
+
+    TaskDto updateTaskStatus(Long taskId,Long statusId);
 
     void delete(Long id);
 

@@ -1,21 +1,17 @@
 package com.denis.svetikov.tasktracker.rest;
 
-import com.denis.svetikov.tasktracker.dto.AuthenticationRegisterRequestDto;
-import com.denis.svetikov.tasktracker.dto.AuthenticationRequestDto;
+import com.denis.svetikov.tasktracker.dto.request.AuthenticationRequestDto;
+import com.denis.svetikov.tasktracker.dto.request.UerRegisterRequestDto;
 import com.denis.svetikov.tasktracker.model.User;
 import com.denis.svetikov.tasktracker.security.jwt.JwtTokenProvider;
 import com.denis.svetikov.tasktracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -54,7 +50,7 @@ public class AuthenticationRestControllerV1 {
         try {
             String username = requestDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-            User user = userService.findByUsername(username);
+            User user = userService.getUserByUsername(username);
 
             if (user == null) {
                 throw new UsernameNotFoundException("User with username: " + username + " not found");
@@ -74,14 +70,14 @@ public class AuthenticationRestControllerV1 {
 
 
     @PostMapping("register")
-    public ResponseEntity register(@RequestBody @Valid AuthenticationRegisterRequestDto registerRequestDto) {
+    public ResponseEntity register(@RequestBody @Valid UerRegisterRequestDto uerRegisterRequestDto) {
 
         User user = new User();
-        user.setUsername(registerRequestDto.getUsername());
-        user.setEmail(registerRequestDto.getEmail());
-        user.setFirstName(registerRequestDto.getFirstName());
-        user.setLastName(registerRequestDto.getLastName());
-        user.setPassword(registerRequestDto.getPassword());
+        user.setUsername(uerRegisterRequestDto.getUsername());
+        user.setEmail(uerRegisterRequestDto.getEmail());
+        user.setFirstName(uerRegisterRequestDto.getFirstName());
+        user.setLastName(uerRegisterRequestDto.getLastName());
+        user.setPassword(uerRegisterRequestDto.getPassword());
         user.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         user.setUpdated(Timestamp.valueOf(LocalDateTime.now()));
 
@@ -89,20 +85,6 @@ public class AuthenticationRestControllerV1 {
 
         return ResponseEntity.ok("You are successfully registered,please login");
 
-    }
-
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
     }
 
 }

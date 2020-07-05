@@ -1,8 +1,7 @@
 package com.denis.svetikov.tasktracker.service;
 
-import com.denis.svetikov.tasktracker.dto.UserDto;
+import com.denis.svetikov.tasktracker.dto.model.UserDto;
 import com.denis.svetikov.tasktracker.model.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -18,13 +17,19 @@ public interface UserService {
 
     User register(User user);
 
-    Page<User> getAll(Pageable pageable);
+    List<UserDto> getAll(Pageable pageable);
 
-    User findByUsername(String username);
+    UserDto getUserDtoByUsername(String username);
 
-    User findById(Long id);
+    User getUserByUsername(String username);
 
-    UserDto update(User user);
+    UserDto getUserDtoById(Long id);
+
+    User getUserById(Long id);
+
+    UserDto updateUserDto(UserDto userDto);
+
+    User updateUser(User user);
 
     void delete(Long id);
 }
