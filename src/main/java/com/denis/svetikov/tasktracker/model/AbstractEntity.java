@@ -1,12 +1,11 @@
 package com.denis.svetikov.tasktracker.model;
 
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * Base class with property 'id'.
@@ -18,20 +17,26 @@ import java.util.Date;
 
 @MappedSuperclass
 @Data
-public class BaseEntity {
+public abstract class AbstractEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedDate
     @Column(name = "created")
-    @NotNull(message = "Create date must not be null")
-    private Date created;
+    private Timestamp created;
 
-    @LastModifiedDate
     @Column(name = "updated")
-    @NotNull(message = "Create date must not be null")
-    private Date updated;
+    private Timestamp updated;
+
+    @PrePersist
+    public void toCreate() {
+        setCreated(new Timestamp(System.currentTimeMillis()));
+    }
+
+    @PreUpdate
+    public void toUpdate() {
+        setUpdated(new Timestamp(System.currentTimeMillis()));
+    }
 
 }

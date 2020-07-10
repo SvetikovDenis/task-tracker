@@ -8,11 +8,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 @Table(name = "tasks")
-public class Task {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Task extends AbstractEntity  {
 
     @NotBlank(message = "Task title can't be null or blank")
     private String title;

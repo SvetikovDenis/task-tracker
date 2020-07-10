@@ -1,6 +1,5 @@
 package com.denis.svetikov.tasktracker.dto.model;
 
-import com.denis.svetikov.tasktracker.model.UserTask;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
@@ -9,16 +8,11 @@ import lombok.Data;
 public class UserTaskDto {
 
     private Long userId;
+    private String username;
+    private String firstName;
+    private String lastName;
     private Long taskId;
-
-
-    public static UserTaskDto userTaskDto(UserTask userTask) {
-        UserTaskDto userTaskDto = new UserTaskDto();
-
-        userTaskDto.setTaskId(userTask.getTask().getId());
-        userTaskDto.setUserId(userTask.getUser().getId());
-
-        return userTaskDto;
-    }
+    private String title;
+    private String status;
 
 }

@@ -68,7 +68,6 @@ public class AuthenticationRestControllerV1 {
         }
     }
 
-
     @PostMapping("register")
     public ResponseEntity register(@RequestBody @Valid UerRegisterRequestDto uerRegisterRequestDto) {
 
@@ -78,8 +77,6 @@ public class AuthenticationRestControllerV1 {
         user.setFirstName(uerRegisterRequestDto.getFirstName());
         user.setLastName(uerRegisterRequestDto.getLastName());
         user.setPassword(uerRegisterRequestDto.getPassword());
-        user.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        user.setUpdated(Timestamp.valueOf(LocalDateTime.now()));
 
         userService.register(user);
 

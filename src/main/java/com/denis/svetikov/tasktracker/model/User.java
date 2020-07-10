@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
-public class User extends BaseEntity {
+public class User extends AbstractEntity {
 
     @NotBlank(message = "username can't be null or blank")
     @Size(min = 5 , max = 15 , message = "username must be at least 5 characters long and not more than 15")

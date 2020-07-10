@@ -2,21 +2,27 @@ package com.denis.svetikov.tasktracker.service.impl;
 
 import com.denis.svetikov.tasktracker.dto.model.UserDto;
 import com.denis.svetikov.tasktracker.exception.db.EntityNotFoundException;
+import com.denis.svetikov.tasktracker.mapper.UserMapper;
 import com.denis.svetikov.tasktracker.model.Role;
 import com.denis.svetikov.tasktracker.model.User;
 import com.denis.svetikov.tasktracker.repository.RoleRepository;
 import com.denis.svetikov.tasktracker.repository.UserRepository;
 import com.denis.svetikov.tasktracker.service.UserService;
+import com.denis.svetikov.tasktracker.specification.UserSearchCriteria;
+import com.denis.svetikov.tasktracker.specification.UserSearchCriteriaSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,12 +40,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final UserSearchCriteriaSpecification userSpecification;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, UserMapper userMapper,UserSearchCriteriaSpecification userSpecification) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+        this.userSpecification = userSpecification;
     }
 
 
@@ -48,27 +58,29 @@ public class UserServiceImpl implements UserService {
         Role roleUser = roleRepository.findByName("ROLE_USER");
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(userRoles);
-
         User registeredUser = userRepository.save(user);
-
-        log.info("IN register - user: {} successfully registered", registeredUser);
-
+        log.info("In register - user: {} successfully registered", registeredUser);
         return registeredUser;
     }
 
     @Override
-    public List<UserDto> getAll(Pageable pageable) {
-        Page<User> usersPage = userRepository.findAll(pageable);
+    public List<UserDto> getAll(UserSearchCriteria request, Pageable pageable) {
 
-        if (usersPage.getTotalElements() == 0) {
+        Sort sort = Sort.by(Sort.Direction.fromString(
+                Optional.ofNullable(request.getOrder()).orElse("desc")),
+                Optional.ofNullable(request.getSort()).orElse("created"));
+
+        Page<User> usersPage = userRepository.findAll(userSpecification.getFilter(request), PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort));
+
+        if (usersPage.isEmpty()) {
             throw new EntityNotFoundException(User.class, "Find all users", "No users found");
         }
+        log.info("In getAll - {} users was found",usersPage.getTotalElements());
         return usersPage.
                 stream().
-                map(UserDto::fromUser).
+                map(userMapper::toDto).
                 collect(Collectors.toList());
     }
 
@@ -78,20 +90,14 @@ public class UserServiceImpl implements UserService {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("username can't be null or empty");
         }
-
         User user = userRepository.findByUsername(username);
-
         if (user == null) {
-            log.warn("In findByUsername - no user found by username: {}", username);
+            log.warn("In getUserDtoByUsername - No user found by username: {}", username);
             throw new EntityNotFoundException(User.class, "username", username);
         }
-
-        UserDto userDto = UserDto.fromUser(user);
-
-        log.info("IN findByUsername - user: {} found by username: {}", user, username);
-        return userDto;
+        log.info("In getUserDtoByUsername - User with id : {} found by username: {}", user.getId(), username);
+        return userMapper.toDto(user);
     }
-
 
     @Override
     public User getUserByUsername(String username) {
@@ -99,18 +105,14 @@ public class UserServiceImpl implements UserService {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username can't be null or empty");
         }
-
         User user = userRepository.findByUsername(username);
-
         if (user == null) {
-            log.warn("In findByUsername - no user found by username: {}", username);
+            log.warn("In getUserByUsername - No user found by username: {}", username);
             throw new EntityNotFoundException(User.class, "username", username);
         }
-
-        log.info("IN findByUsername - user: {} found by username: {}", user, username);
+        log.info("In getUserByUsername - User with id : {} found by username: {}", user.getId(), username);
         return user;
     }
-
 
     @Override
     public User getUserById(Long id) {
@@ -118,11 +120,12 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             throw new IllegalArgumentException("User id can't be null");
         }
-
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            throw new EntityNotFoundException(User.class,"id", id.toString());
+            log.warn("In getUserById - No user found with id : {}", id);
+            throw new EntityNotFoundException(User.class, "id", id.toString());
         }
+        log.info("In getUserById - Found user with id : ", id);
         return user;
     }
 
@@ -132,58 +135,27 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             throw new IllegalArgumentException("User id can't be null");
         }
-
         User user = userRepository.findById(id).orElse(null);
-
         if (user == null) {
-            log.warn("In findById - no user found by id: {}", id);
+            log.warn("In getUserDtoById - no user found by id: {}", id);
             throw new EntityNotFoundException(User.class, "id", id.toString());
         }
-
-        UserDto userDto = UserDto.fromUser(user);
-
-        log.info("In findById - user: {} found by id: {}", user);
-        return userDto;
+        log.info("In getUserDtoById - user: {} found by id: {}", user);
+        return userMapper.toDto(user);
     }
-
 
     @Override
     public UserDto updateUserDto(UserDto userDto) {
 
         User user = userRepository.findById(userDto.getId()).orElse(null);
-
         if (user == null) {
+            log.warn("In updateUserDto - No User was found with id : {}",userDto.getId());
             throw new EntityNotFoundException(User.class, "user", userDto.toString());
         }
-
-        user.setUsername(userDto.getUsername());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-
+        userMapper.updateEntity(userDto, user);
         userRepository.save(user);
-
-        return UserDto.fromUser(user);
-    }
-
-
-    @Override
-    public User updateUser(User user) {
-
-        User newUser  = userRepository.findById(user.getId()).orElse(null);
-
-        if (newUser == null) {
-            throw new EntityNotFoundException(User.class, "user", user.toString());
-        }
-
-        newUser.setUsername(user.getUsername());
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-        newUser.setEmail(user.getEmail());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        userRepository.save(newUser);
-        return newUser;
+        log.info("In updateUserDto - User with id : {} was updated", userDto.getId());
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -192,13 +164,12 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             throw new IllegalArgumentException("User id can't be null");
         }
-
         User user = userRepository.findById(id).orElse(null);
-
         if (user == null) {
+            log.warn("In delete - No user was found with id : {}",id);
             throw new EntityNotFoundException(User.class, "id", id.toString());
         }
         userRepository.deleteById(id);
-        log.info("IN delete - user with id: {} successfully deleted", id);
+        log.info("In delete - user with id: {} was deleted", id);
     }
 }

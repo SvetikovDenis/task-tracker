@@ -25,7 +25,9 @@
 </properties>
 
 <dependencies>
+
     <!-- Spring -->
+
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -48,6 +50,14 @@
     <dependency>
         <groupId>com.fasterxml.jackson.dataformat</groupId>
         <artifactId>jackson-dataformat-xml</artifactId>
+    </dependency>
+
+    <!-- DTO Model Mapper -->
+
+    <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+        <version>2.3.0</version>
     </dependency>
 
     <!-- Liquibase -->

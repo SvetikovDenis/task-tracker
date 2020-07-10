@@ -38,8 +38,12 @@
                 <constraints nullable="false"/>
             </column>
 
-
         </createTable>
+
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB DEFAULT CHARSET=UTF8"/>
+        </modifySql>
+
     </changeSet>
 
     <changeSet id="1.0.1" author="denis.svetikov">
@@ -61,6 +65,11 @@
             </column>
 
         </createTable>
+
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB DEFAULT CHARSET=UTF8"/>
+        </modifySql>
+
     </changeSet>
 
     <changeSet id="1.0.2" author="denis.svetikov">
@@ -76,6 +85,11 @@
             <column name="role_id" type="BIGINT">
             </column>
         </createTable>
+
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB DEFAULT CHARSET=UTF8"/>
+        </modifySql>
+
     </changeSet>
 
     <changeSet id="1.0.3" author="denis.svetikov">
@@ -99,9 +113,6 @@
     </changeSet>
 
 
-
-
-
     <changeSet id="1.0.5" author="denis.svetikov">
         <createTable tableName="task_status">
 
@@ -114,6 +125,11 @@
             </column>
 
         </createTable>
+
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB DEFAULT CHARSET=UTF8"/>
+        </modifySql>
+
     </changeSet>
 
     <changeSet id="1.0.6" author="denis.svetikov">
@@ -135,8 +151,21 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
 
         </createTable>
+
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB DEFAULT CHARSET=UTF8"/>
+        </modifySql>
+
     </changeSet>
 
 
@@ -164,6 +193,11 @@
             <column name="task_id" type="BIGINT">
             </column>
         </createTable>
+
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB DEFAULT CHARSET=UTF8"/>
+        </modifySql>
+
     </changeSet>
 
 
@@ -171,8 +205,8 @@
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="user_task"
                                  constraintName="fk_user_task_user"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
+                                 onDelete="RESTRICT"
+                                 onUpdate="CASCADE"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
     </changeSet>
@@ -182,7 +216,7 @@
                                  baseTableName="user_task"
                                  constraintName="fk_user_task_task"
                                  onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
+                                 onUpdate="CASCADE"
                                  referencedColumnNames="id"
                                  referencedTableName="tasks"/>
     </changeSet>
@@ -258,7 +292,8 @@
             <column name="title" type="STRING"/>
             <column name="description" type="STRING"/>
             <column name="task_status_id" type="NUMERIC"/>
-
+            <column name="created" type="TIMESTAMP"/>
+            <column name="updated" type="TIMESTAMP"/>
 
         </loadData>
     </changeSet>
@@ -277,9 +312,6 @@
 
         </loadData>
     </changeSet>
-
-
-
 
 
 
