@@ -1,9 +1,8 @@
 package com.denis.svetikov.tasktracker.dto.model;
 
-import com.denis.svetikov.tasktracker.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -42,5 +41,18 @@ public class UserDto extends AbstractDto {
     @Email(message = "You must provide a valid email address")
     @JsonView({StandardView.class,DetailsView.class})
     private String email;
+
+    public UserDto() {
+    }
+
+    @Builder
+    public UserDto(Long id,String username,String firstName,String lastName,String email) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
 
 }

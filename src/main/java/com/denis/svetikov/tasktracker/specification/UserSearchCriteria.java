@@ -1,5 +1,6 @@
 package com.denis.svetikov.tasktracker.specification;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Date;
@@ -17,6 +18,21 @@ public class UserSearchCriteria {
     private String operation;
     private Date date;
 
+
+    public UserSearchCriteria() {
+    }
+
+    @Builder
+    public UserSearchCriteria(String username, String email, String firstName, String lastName, String sort, String order, String operation, Date date) {
+        this.username = username;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.sort = sort;
+        this.order = order;
+        this.operation = operation;
+        this.date = date;
+    }
 
     @Override
     public String toString() {

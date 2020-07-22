@@ -1,5 +1,6 @@
 package com.denis.svetikov.tasktracker.model;
-import lombok.Data;
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -7,10 +8,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-
+@Data
 @Entity
 @Table(name = "users")
-@Data
 public class User extends AbstractEntity {
 
     @NotBlank(message = "username can't be null or blank")
@@ -45,5 +45,19 @@ public class User extends AbstractEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 
+
+    public User() {
+    }
+
+    @Builder
+    public User(Long id,String username,String firstName,String lastName,String email,String password,List<Role> roles) {
+        this.setId(id);
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
 }

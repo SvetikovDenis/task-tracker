@@ -2,6 +2,7 @@ package com.denis.svetikov.tasktracker.dto.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

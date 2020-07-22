@@ -1,0 +1,41 @@
+{
+  "type": "array",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Users JSON Schema",
+  "minItems": 1,
+  "uniqueItems": true,
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "username",
+      "firstName",
+      "lastName",
+      "email"
+    ],
+    "properties": {
+      "id": {
+        "type": "number"
+      },
+      "username": {
+        "type": "string",
+        "minLength": 4,
+        "maxLength" : 15
+      },
+      "firstName": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength" : 30
+      },
+      "lastName": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength" : 30
+      },
+      "email": {
+        "type": "string"
+      }
+
+    }
+  }
+}

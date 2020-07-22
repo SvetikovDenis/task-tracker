@@ -23,7 +23,7 @@ public interface UserTaskService {
 
     UserTask getUserTaskByTaskId(Long id);
 
-    void save(UserTask userTask);
+    UserTask save(UserTask userTask);
 
     UserTaskDto updateUserTask(Long taskId, Long userId);
 

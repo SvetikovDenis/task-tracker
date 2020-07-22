@@ -1,5 +1,6 @@
 package com.denis.svetikov.tasktracker.model;
 
+import lombok.Builder;
 import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -28,4 +29,15 @@ public class Task extends AbstractEntity  {
     private User user;
 
 
+    public Task() {
+    }
+
+    @Builder
+    public Task(Long id, String title,String description,TaskStatus taskStatus,User user) {
+        this.setId(id);
+        this.title = title;
+        this.description = description;
+        this.status = taskStatus;
+        this.user = user;
+    }
 }

@@ -1,5 +1,7 @@
 package com.denis.svetikov.tasktracker.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,9 +15,9 @@ import java.util.List;
  * @version v2
  */
 
+@Data
 @Entity
 @Table(name = "roles")
-@Data
 public class Role extends AbstractEntity {
 
     @NotBlank
@@ -25,10 +27,21 @@ public class Role extends AbstractEntity {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<User> users;
 
+
     @Override
     public String toString() {
         return "Role{" +
                 "id: " + super.getId() + ", " +
                 "name: " + name + "}";
+    }
+
+
+    public Role() {
+    }
+
+    @Builder
+    public Role( String name, List<User> users) {
+        this.name = name;
+        this.users = users;
     }
 }

@@ -1,11 +1,11 @@
 package com.denis.svetikov.tasktracker.model;
 
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -19,4 +19,12 @@ public class TaskStatus {
     @NotBlank
     private String status;
 
+
+    public TaskStatus() {
+    }
+
+    @Builder
+    public TaskStatus(String status) {
+        this.status = status;
+    }
 }

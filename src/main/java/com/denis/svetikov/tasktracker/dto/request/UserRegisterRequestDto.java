@@ -1,5 +1,6 @@
 package com.denis.svetikov.tasktracker.dto.request;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -16,7 +17,7 @@ import javax.validation.constraints.Size;
  */
 
 @Data
-public class UerRegisterRequestDto {
+public class UserRegisterRequestDto {
 
     @NotBlank(message = "username can't be null or blank")
     @Size(min = 5, max = 15, message = "username must be at least 5 characters long and not more than 15")
@@ -43,5 +44,18 @@ public class UerRegisterRequestDto {
             message = "Password must be at least 8 characters long be of mixed case and also contain a digit and a special symbol.")
     @Column(name = "password")
     private String password;
+
+    public UserRegisterRequestDto() {
+    }
+
+    @Builder
+    public UserRegisterRequestDto(String username,String email,String firstName,String lastName,String password) {
+        this.username = username;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
+
 
 }

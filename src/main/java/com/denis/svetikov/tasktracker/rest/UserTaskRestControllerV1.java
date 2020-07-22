@@ -29,13 +29,13 @@ public class UserTaskRestControllerV1 {
     }
 
     @GetMapping("/task/{id}")
-    public ResponseEntity<UserTaskDto> getUserTaskByTaskId(@PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity<UserTaskDto> getUserTaskByTaskId(@PathVariable("id") Long id) throws EntityNotFoundException {
         UserTaskDto userTask = userTaskService.getUserTaskDtoByTaskId(id);
         return new ResponseEntity<>(userTask,HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<UserTaskDto>> getAllUserTasksByUserId(@PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity<List<UserTaskDto>> getAllUserTasksByUserId(@PathVariable("id") Long id) throws EntityNotFoundException {
         List<UserTaskDto> userTasks = userTaskService.getAllUserTasksByUserId(id);
         return new ResponseEntity<>(userTasks,HttpStatus.OK);
     }
@@ -48,14 +48,14 @@ public class UserTaskRestControllerV1 {
 
     @Transactional
     @DeleteMapping("/task/{id}")
-    public ResponseEntity deleteUserTaskByTaskId(@PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity deleteUserTaskByTaskId(@PathVariable("id") Long id) throws EntityNotFoundException {
         userTaskService.deleteByTaskId(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Transactional
     @DeleteMapping("/user/{id}")
-    public ResponseEntity deleteUserTaskByUserId(@PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity deleteUserTaskByUserId(@PathVariable("id") Long id) throws EntityNotFoundException {
         userTaskService.deleteByUserId(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

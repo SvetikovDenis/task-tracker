@@ -1,6 +1,7 @@
 package com.denis.svetikov.tasktracker.service.impl;
 
 import com.denis.svetikov.tasktracker.dto.model.UserDto;
+import com.denis.svetikov.tasktracker.dto.request.UserRegisterRequestDto;
 import com.denis.svetikov.tasktracker.exception.db.EntityNotFoundException;
 import com.denis.svetikov.tasktracker.mapper.UserMapper;
 import com.denis.svetikov.tasktracker.model.Role;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,13 +56,29 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User register(@Valid User user) {
+    public User register(UserRegisterRequestDto userRegisterRequestDto) {
+
+        User userCandidate = userRepository.findByUsername(userRegisterRequestDto.getUsername());
+        if (userCandidate != null) {
+            throw new IllegalArgumentException("User with username : " + userCandidate.getUsername() + " already exists");
+        }
+        userCandidate = userRepository.findByEmail(userRegisterRequestDto.getEmail());
+        if (userCandidate != null) {
+            throw new IllegalArgumentException("User with email : " + userCandidate.getEmail() + " already exists");
+        }
+
         Role roleUser = roleRepository.findByName("ROLE_USER");
-        List<Role> userRoles = new ArrayList<>();
-        userRoles.add(roleUser);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(userRoles);
-        User registeredUser = userRepository.save(user);
+        List<Role> userRoles = Arrays.asList(roleUser);
+
+        User newUser = new User();
+        newUser.setUsername(userRegisterRequestDto.getUsername());
+        newUser.setFirstName(userRegisterRequestDto.getFirstName());
+        newUser.setLastName(userRegisterRequestDto.getLastName());
+        newUser.setEmail(userRegisterRequestDto.getEmail());
+        newUser.setPassword(passwordEncoder.encode(userRegisterRequestDto.getPassword()));
+        newUser.setRoles(userRoles);
+
+        User registeredUser = userRepository.save(newUser);
         log.info("In register - user: {} successfully registered", registeredUser);
         return registeredUser;
     }
@@ -153,8 +171,8 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException(User.class, "user", userDto.toString());
         }
         userMapper.updateEntity(userDto, user);
-        userRepository.save(user);
-        log.info("In updateUserDto - User with id : {} was updated", userDto.getId());
+        user = userRepository.save(user);
+        log.info("In updateUserDto - User with id : {} was updated", user.getId());
         return userMapper.toDto(user);
     }
 
@@ -171,5 +189,21 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteById(id);
         log.info("In delete - user with id: {} was deleted", id);
+    }
+
+    @Override
+    public void delete(String username) {
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username can't be null or empty");
+        }
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            log.warn("In delete - No user was found with username : {}",username);
+            throw new EntityNotFoundException(User.class, "username", username);
+        }
+        userRepository.delete(user);
+        log.info("In delete - user with id: {} was deleted", user.getId());
     }
 }

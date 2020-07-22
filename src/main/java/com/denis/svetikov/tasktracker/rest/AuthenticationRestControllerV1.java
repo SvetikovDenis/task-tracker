@@ -1,7 +1,7 @@
 package com.denis.svetikov.tasktracker.rest;
 
 import com.denis.svetikov.tasktracker.dto.request.AuthenticationRequestDto;
-import com.denis.svetikov.tasktracker.dto.request.UerRegisterRequestDto;
+import com.denis.svetikov.tasktracker.dto.request.UserRegisterRequestDto;
 import com.denis.svetikov.tasktracker.model.User;
 import com.denis.svetikov.tasktracker.security.jwt.JwtTokenProvider;
 import com.denis.svetikov.tasktracker.service.UserService;
@@ -15,8 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,17 +67,8 @@ public class AuthenticationRestControllerV1 {
     }
 
     @PostMapping("register")
-    public ResponseEntity register(@RequestBody @Valid UerRegisterRequestDto uerRegisterRequestDto) {
-
-        User user = new User();
-        user.setUsername(uerRegisterRequestDto.getUsername());
-        user.setEmail(uerRegisterRequestDto.getEmail());
-        user.setFirstName(uerRegisterRequestDto.getFirstName());
-        user.setLastName(uerRegisterRequestDto.getLastName());
-        user.setPassword(uerRegisterRequestDto.getPassword());
-
-        userService.register(user);
-
+    public ResponseEntity register(@RequestBody @Valid UserRegisterRequestDto userRegisterRequestDto) {
+        userService.register(userRegisterRequestDto);
         return ResponseEntity.ok("You are successfully registered,please login");
 
     }

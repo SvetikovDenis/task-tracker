@@ -9,12 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -37,7 +36,7 @@ public class TaskRestControllerV1 {
 
     @JsonView(TaskDto.StandardView.class)
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable(name = "id") Long id) throws EntityNotFoundException {
         TaskDto task = taskService.getTaskDtoById(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
@@ -58,8 +57,8 @@ public class TaskRestControllerV1 {
 
     @JsonView(TaskDto.StandardView.class)
     @PostMapping
-    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto task, Principal principal) {
-        TaskDto newTask = taskService.createTask(task,principal);
+    public ResponseEntity<TaskDto> createTask(@Validated({TaskDto.New.class}) @RequestBody TaskDto task, Authentication authentication) {
+        TaskDto newTask = taskService.createTask(task,authentication);
         return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }
 
@@ -78,7 +77,7 @@ public class TaskRestControllerV1 {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteTask( @PathVariable Long id) {
+    public ResponseEntity deleteTask( @PathVariable(name = "id") Long id) {
         taskService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

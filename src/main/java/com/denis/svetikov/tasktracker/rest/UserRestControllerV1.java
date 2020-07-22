@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,7 @@ public class UserRestControllerV1 {
     }
 
     @JsonView(UserDto.StandardView.class)
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id) throws EntityNotFoundException {
         UserDto user = userService.getUserDtoById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -60,10 +59,15 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity deleteUserById(@PathVariable(name = "id") Long id) throws EntityNotFoundException {
         userService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping()
+    public ResponseEntity deleteUserByUserName(@RequestParam(name = "username") String username) throws EntityNotFoundException {
+        userService.delete(username);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

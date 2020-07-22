@@ -1,7 +1,6 @@
 package com.denis.svetikov.tasktracker.service.impl;
 
 import com.denis.svetikov.tasktracker.dto.model.TaskDto;
-import com.denis.svetikov.tasktracker.dto.model.UserTaskDto;
 import com.denis.svetikov.tasktracker.exception.db.EntityNotFoundException;
 import com.denis.svetikov.tasktracker.mapper.TaskMapper;
 import com.denis.svetikov.tasktracker.model.Task;
@@ -21,10 +20,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -130,7 +129,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     @Override
-    public TaskDto createTask(TaskDto task, Principal principal) {
+    public TaskDto createTask(TaskDto task, Authentication authentication) {
 
         TaskStatus taskStatus = taskStatusService.getTaskStatusById(task.getStatusId());
 
@@ -140,11 +139,11 @@ public class TaskServiceImpl implements TaskService {
         }
 
         Task newTask = taskMapper.toEntity(task);
-        taskRepository.save(newTask);
+        newTask = taskRepository.save(newTask);
 
         log.info("In createTask - Created new task with id : {}",newTask.getId());
 
-        User user = userService.getUserByUsername(principal.getName());
+        User user = userService.getUserByUsername(authentication.getName());
         UserTask userTask = new UserTask();
         userTask.setTask(newTask);
         userTask.setUser(user);

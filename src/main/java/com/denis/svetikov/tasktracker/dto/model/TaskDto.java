@@ -2,12 +2,15 @@ package com.denis.svetikov.tasktracker.dto.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TaskDto extends AbstractDto{
 
@@ -22,5 +25,17 @@ public class TaskDto extends AbstractDto{
     @NotNull(groups = {New.class}, message = "Task status id can't be null")
     @JsonView({StandardView.class,DetailsView.class})
     private Long statusId;
+
+    public TaskDto() {
+    }
+
+
+    @Builder
+    public TaskDto(Long id,String title,String description,Long statusId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.statusId = statusId;
+    }
 
 }

@@ -4,8 +4,8 @@ import com.denis.svetikov.tasktracker.dto.model.TaskDto;
 import com.denis.svetikov.tasktracker.model.Task;
 import com.denis.svetikov.tasktracker.specification.TaskSearchCriteria;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface TaskService {
@@ -20,7 +20,7 @@ public interface TaskService {
 
     Task getTaskById(Long id);
 
-    TaskDto createTask(TaskDto task, Principal principal);
+    TaskDto createTask(TaskDto task, Authentication authentication);
 
     TaskDto updateTask(TaskDto task);
 

@@ -41,7 +41,7 @@ public class UserSearchCriteriaSpecification extends BaseSpecification<User, Use
     }
 
 
-    private Specification<User> userkDateGreaterThen(String attribute, Date date) {
+    private Specification<User> userDateGreaterThen(String attribute, Date date) {
         return (root, query, cb) -> {
             if (date == null) {
                 return null;
@@ -54,7 +54,7 @@ public class UserSearchCriteriaSpecification extends BaseSpecification<User, Use
         };
     }
 
-    private Specification<User> userkDateLessThen(String attribute, Date date) {
+    private Specification<User> userDateLessThen(String attribute, Date date) {
         return (root, query, cb) -> {
             if (date == null) {
                 return null;
@@ -101,9 +101,9 @@ public class UserSearchCriteriaSpecification extends BaseSpecification<User, Use
         if (operation == null || operation.isEmpty() || date == null) {
             return null;
         } else if (operation.equalsIgnoreCase(">")) {
-            return userkDateGreaterThen("created", date);
+            return userDateGreaterThen("created", date);
         } else if (operation.equalsIgnoreCase("<")) {
-            return userkDateLessThen("created", date);
+            return userDateLessThen("created", date);
         } else if (operation.equalsIgnoreCase(":")) {
             return userDateEqual("created", date);
         }

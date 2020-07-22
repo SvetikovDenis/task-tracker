@@ -119,8 +119,8 @@ public class UserTaskServiceImpl implements UserTaskService {
     }
 
     @Override
-    public void save(UserTask userTask) {
-        userTaskRepository.save(userTask);
+    public UserTask save(UserTask userTask) {
+       return userTaskRepository.save(userTask);
     }
 
 
