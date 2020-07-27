@@ -23,7 +23,7 @@ public class TaskDto extends AbstractDto{
     private String description;
 
     @NotNull(groups = {New.class}, message = "Task status id can't be null")
-    @JsonView({StandardView.class,DetailsView.class})
+    @JsonView({StandardView.class,DetailsView.class}) 
     private Long statusId;
 
     public TaskDto() {

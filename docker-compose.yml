@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+
+  mysqldb:
+    image: mysql:8
+    networks:
+      - task-tracker-mysql-network
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=Admin74!
+
+  task-tracker:
+    build:
+        context: ./
+        dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - task-tracker-mysql-network
+    depends_on:
+      - mysqldb
+
+
+networks:
+  task-tracker-mysql-network:

@@ -39,21 +39,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
-    private final UserSearchCriteriaSpecification userSpecification;
-
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, UserMapper userMapper,UserSearchCriteriaSpecification userSpecification) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
-        this.userSpecification = userSpecification;
-    }
-
+    private  UserRepository userRepository;
+    @Autowired
+    private  RoleRepository roleRepository;
+    @Autowired
+    private  BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private  UserMapper userMapper;
+    @Autowired
+    private  UserSearchCriteriaSpecification userSpecification;
 
     @Override
     public User register(UserRegisterRequestDto userRegisterRequestDto) {

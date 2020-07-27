@@ -13,12 +13,9 @@ import org.springframework.stereotype.Service;
 public class TaskStatusServiceImpl implements TaskStatusService {
 
 
-    private final TaskStatusRepository taskStatusRepository;
-
     @Autowired
-    public TaskStatusServiceImpl(TaskStatusRepository taskStatusRepository) {
-        this.taskStatusRepository = taskStatusRepository;
-    }
+    private  TaskStatusRepository taskStatusRepository;
+
 
     @Override
     public TaskStatus getTaskStatusById(Long id) {
